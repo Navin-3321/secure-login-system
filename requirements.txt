@@ -1,0 +1,6 @@
+flask
+flask-sqlalchemy
+werkzeug
+pyotp
+qrcode[pil]
+pillow

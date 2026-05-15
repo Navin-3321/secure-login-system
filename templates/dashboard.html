@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card shadow mt-4">
+            <div class="card-header py-3">
+                <h5 class="mb-0"><i class="fas fa-tachometer-alt text-primary me-2"></i>Dashboard</h5>
+            </div>
+            <div class="card-body p-4">
+                <h4 class="mb-1">Welcome, <span class="text-primary">{{ user.username }}</span> 👋</h4>
+                <p class="text-secondary mb-4">You are securely logged in.</p>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="card bg-dark border-secondary p-3">
+                            <div class="text-secondary small mb-1"><i class="fas fa-envelope me-1"></i>Email</div>
+                            <div>{{ user.email }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card bg-dark border-secondary p-3">
+                            <div class="text-secondary small mb-1"><i class="fas fa-clock me-1"></i>Last Login</div>
+                            <div>{{ user.last_login.strftime('%d %b %Y, %H:%M') if user.last_login else 'First login' }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card bg-dark border-secondary p-3">
+                            <div class="text-secondary small mb-1"><i class="fas fa-shield-alt me-1"></i>2FA Status</div>
+                            <div>
+                                {% if user.twofa_enabled %}
+                                    <span class="badge bg-success">Enabled</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark">Disabled</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card bg-dark border-secondary p-3">
+                            <div class="text-secondary small mb-1"><i class="fas fa-calendar me-1"></i>Member Since</div>
+                            <div>{{ user.created_at.strftime('%d %b %Y') }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if not user.twofa_enabled %}
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Two-Factor Authentication is not enabled. <a href="{{ url_for('setup_2fa') }}" class="alert-link">Enable 2FA</a> for better security.
+                </div>
+                {% endif %}
+
+                <a href="{{ url_for('logout') }}" class="btn btn-outline-danger">
+                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                </a>
+                {% if not user.twofa_enabled %}
+                <a href="{{ url_for('setup_2fa') }}" class="btn btn-outline-primary ms-2">
+                    <i class="fas fa-mobile-alt me-2"></i>Setup 2FA
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
